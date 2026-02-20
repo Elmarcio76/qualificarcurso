@@ -1,0 +1,1 @@
+ALTER TABLE public.enrollments ALTER COLUMN exam_available_after SET DEFAULT (now() + '20 days'::interval);

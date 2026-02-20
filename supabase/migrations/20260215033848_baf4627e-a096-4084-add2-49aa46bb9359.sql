@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ALTER COLUMN cpf DROP NOT NULL;

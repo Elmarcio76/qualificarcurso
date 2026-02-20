@@ -1,0 +1,1 @@
+UPDATE enrollments SET exam_available_after = now() WHERE id IN ('f003e0d3-29aa-4282-9b0f-4574d1af09de', '5a36d98a-f257-49a1-98d3-85abfe321ea2');

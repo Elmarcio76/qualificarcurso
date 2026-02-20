@@ -1,0 +1,13 @@
+project_id = "rsfhsmmvfqgvusnelasq"
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.verify-payment]
+verify_jwt = false
+
+[functions.submit-exam]
+verify_jwt = false
+
+[functions.verify-certificate]
+verify_jwt = false
