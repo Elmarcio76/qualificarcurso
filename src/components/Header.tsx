@@ -14,7 +14,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Qualificar Cursos" className="h-20 w-auto rounded bg-white px-2 py-0.5" />
+          <img src={logo} alt="Qualificar Cursos" className="h-10 w-auto rounded bg-white px-2 py-0.5" />
         </Link>
         <nav className="flex items-center gap-2">
           {user ? (
