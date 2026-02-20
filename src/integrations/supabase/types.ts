@@ -439,6 +439,27 @@ export type Database = {
         }
         Relationships: []
       }
+      usuarios: {
+        Row: {
+          cpf: string
+          email: string
+          idusuario: string
+          nome: string
+        }
+        Insert: {
+          cpf: string
+          email: string
+          idusuario: string
+          nome: string
+        }
+        Update: {
+          cpf?: string
+          email?: string
+          idusuario?: string
+          nome?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       exam_questions_public: {
