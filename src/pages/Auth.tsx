@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,10 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState<"tabs" | "forgot">("tabs");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -110,6 +114,23 @@ const Auth = () => {
     }
   };
 
+  const onForgotPassword = async () => {
+    if (!forgotEmail) {
+      toast({ title: "Informe seu email", variant: "destructive" });
+      return;
+    }
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast({ title: "Erro ao enviar email", description: error.message, variant: "destructive" });
+    } else {
+      setForgotSent(true);
+    }
+  };
+
   const PasswordToggle = ({ show, toggle }: { show: boolean; toggle: () => void }) => (
     <button type="button" onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
       {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -124,50 +145,93 @@ const Auth = () => {
           <div className="mb-6 flex justify-center">
             <img src={logo} alt="Qualificar Cursos" className="h-20 w-auto object-contain" />
           </div>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Cadastrar</TabsTrigger>
-            </TabsList>
-            <TabsContent value="login">
-              <Form {...loginForm}>
-                <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
-                  <FormField control={loginForm.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="seu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={loginForm.control} name="password" render={({ field }) => (
-                    <FormItem><FormLabel>Senha</FormLabel><FormControl><div className="relative"><Input type={showPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showPassword} toggle={() => setShowPassword(!showPassword)} /></div></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <Button type="submit" className="w-full" disabled={loading}>{loading ? "Entrando..." : "Entrar"}</Button>
-                </form>
-              </Form>
-            </TabsContent>
-            <TabsContent value="signup">
-              <Form {...signupForm}>
-                <form onSubmit={signupForm.handleSubmit(onSignup)} className="space-y-4">
-                  <FormField control={signupForm.control} name="name" render={({ field }) => (
-                    <FormItem><FormLabel>Nome completo</FormLabel><FormControl><Input placeholder="Seu nome" {...field} /></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={signupForm.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="seu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={signupForm.control} name="cpf" render={({ field }) => (
-                    <FormItem><FormLabel>CPF</FormLabel><FormControl><Input placeholder="000.000.000-00" value={field.value} onChange={(e) => field.onChange(maskCPF(e.target.value))} /></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={signupForm.control} name="phone" render={({ field }) => (
-                    <FormItem><FormLabel>Telefone</FormLabel><FormControl><Input placeholder="(00) 00000-0000" value={field.value} onChange={(e) => field.onChange(maskPhone(e.target.value))} /></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={signupForm.control} name="password" render={({ field }) => (
-                    <FormItem><FormLabel>Senha</FormLabel><FormControl><div className="relative"><Input type={showPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showPassword} toggle={() => setShowPassword(!showPassword)} /></div></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <FormField control={signupForm.control} name="confirmPassword" render={({ field }) => (
-                    <FormItem><FormLabel>Confirmar senha</FormLabel><FormControl><div className="relative"><Input type={showConfirmPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showConfirmPassword} toggle={() => setShowConfirmPassword(!showConfirmPassword)} /></div></FormControl><FormMessage /></FormItem>
-                  )} />
-                  <Button type="submit" className="w-full" disabled={loading}>{loading ? "Cadastrando..." : "Cadastrar"}</Button>
-                </form>
-              </Form>
-            </TabsContent>
-          </Tabs>
+
+          {view === "forgot" ? (
+            <div>
+              <button
+                onClick={() => { setView("tabs"); setForgotSent(false); setForgotEmail(""); }}
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4"
+              >
+                <ArrowLeft className="h-4 w-4" /> Voltar ao login
+              </button>
+              <h2 className="text-xl font-bold mb-1">Esqueci minha senha</h2>
+              {forgotSent ? (
+                <div className="py-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Um email de redefinição foi enviado para <strong>{forgotEmail}</strong>.
+                  </p>
+                  <p className="text-sm text-muted-foreground">Verifique sua caixa de entrada e a pasta de spam.</p>
+                </div>
+              ) : (
+                <div className="space-y-4 mt-4">
+                  <p className="text-sm text-muted-foreground">Digite seu email e enviaremos um link para redefinir sua senha.</p>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium block">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && onForgotPassword()}
+                    />
+                  </div>
+                  <Button className="w-full" onClick={onForgotPassword} disabled={forgotLoading}>
+                    {forgotLoading ? "Enviando..." : "Enviar link de redefinição"}
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="login">Entrar</TabsTrigger>
+                <TabsTrigger value="signup">Cadastrar</TabsTrigger>
+              </TabsList>
+              <TabsContent value="login">
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
+                    <FormField control={loginForm.control} name="email" render={({ field }) => (
+                      <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="seu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={loginForm.control} name="password" render={({ field }) => (
+                      <FormItem><FormLabel>Senha</FormLabel><FormControl><div className="relative"><Input type={showPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showPassword} toggle={() => setShowPassword(!showPassword)} /></div></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <div className="text-right -mt-2">
+                      <button type="button" onClick={() => setView("forgot")} className="text-sm text-primary hover:underline">
+                        Esqueci minha senha
+                      </button>
+                    </div>
+                    <Button type="submit" className="w-full" disabled={loading}>{loading ? "Entrando..." : "Entrar"}</Button>
+                  </form>
+                </Form>
+              </TabsContent>
+              <TabsContent value="signup">
+                <Form {...signupForm}>
+                  <form onSubmit={signupForm.handleSubmit(onSignup)} className="space-y-4">
+                    <FormField control={signupForm.control} name="name" render={({ field }) => (
+                      <FormItem><FormLabel>Nome completo</FormLabel><FormControl><Input placeholder="Seu nome" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={signupForm.control} name="email" render={({ field }) => (
+                      <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="seu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={signupForm.control} name="cpf" render={({ field }) => (
+                      <FormItem><FormLabel>CPF</FormLabel><FormControl><Input placeholder="000.000.000-00" value={field.value} onChange={(e) => field.onChange(maskCPF(e.target.value))} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={signupForm.control} name="phone" render={({ field }) => (
+                      <FormItem><FormLabel>Telefone</FormLabel><FormControl><Input placeholder="(00) 00000-0000" value={field.value} onChange={(e) => field.onChange(maskPhone(e.target.value))} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={signupForm.control} name="password" render={({ field }) => (
+                      <FormItem><FormLabel>Senha</FormLabel><FormControl><div className="relative"><Input type={showPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showPassword} toggle={() => setShowPassword(!showPassword)} /></div></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={signupForm.control} name="confirmPassword" render={({ field }) => (
+                      <FormItem><FormLabel>Confirmar senha</FormLabel><FormControl><div className="relative"><Input type={showConfirmPassword ? "text" : "password"} placeholder="••••••" {...field} /><PasswordToggle show={showConfirmPassword} toggle={() => setShowConfirmPassword(!showConfirmPassword)} /></div></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <Button type="submit" className="w-full" disabled={loading}>{loading ? "Cadastrando..." : "Cadastrar"}</Button>
+                  </form>
+                </Form>
+              </TabsContent>
+            </Tabs>
+          )}
         </CardContent>
       </Card>
     </div>

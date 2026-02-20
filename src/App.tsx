@@ -16,6 +16,7 @@ import Admin from "./pages/Admin";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import VerifyCertificate from "./pages/VerifyCertificate";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/verify-certificate" element={<VerifyCertificate />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </CartProvider>
