@@ -17,6 +17,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import ResetPassword from "./pages/ResetPassword";
+import FAQ from "./pages/FAQ";
+import Contact from "./pages/Contact";
+import CourseInfo from "./pages/CourseInfo";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +43,9 @@ const App = () => (
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/verify-certificate" element={<VerifyCertificate />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/course-info" element={<CourseInfo />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </CartProvider>
