@@ -35,9 +35,9 @@ const faqItems = [
 const FAQ = () => {
   return (
     <Layout>
-      <section className="py-16 bg-primary flex-1">
+      <section className="py-16 bg-background flex-1">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h1 className="text-3xl font-bold text-primary-foreground text-center mb-10">
+          <h1 className="text-3xl font-bold text-foreground text-center mb-10">
             Perguntas Frequentes
           </h1>
           <Accordion type="single" collapsible className="space-y-3">
@@ -45,12 +45,12 @@ const FAQ = () => {
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border border-border/20 rounded-lg bg-primary/80 px-4"
+                className="border border-border rounded-lg bg-card px-4"
               >
-                <AccordionTrigger className="text-primary-foreground hover:no-underline text-left">
+                <AccordionTrigger className="text-foreground hover:no-underline text-left">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-accent">
+                <AccordionContent className="text-muted-foreground">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>

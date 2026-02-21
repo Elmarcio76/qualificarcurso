@@ -32,7 +32,7 @@ const steps = [
 const CourseInfo = () => {
   return (
     <Layout>
-      <section className="py-16 bg-primary">
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold text-accent text-center mb-10 italic">
             Base Legal dos Cursos Ofertados
