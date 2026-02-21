@@ -24,7 +24,7 @@ const Footer = () => (
 );
 
 const Layout = ({ children }: { children: ReactNode }) => (
-  <div className="min-h-screen bg-background flex flex-col">
+  <div className="min-h-screen bg-primary flex flex-col">
     <Header />
     <main className="flex-1">{children}</main>
     <Footer />
