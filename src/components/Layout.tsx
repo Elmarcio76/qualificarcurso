@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Home } from "lucide-react";
 import Header from "./Header";
 
 const Footer = () => (
@@ -23,12 +25,28 @@ const Footer = () => (
   </footer>
 );
 
-const Layout = ({ children }: { children: ReactNode }) => (
-  <div className="min-h-screen bg-primary flex flex-col">
-    <Header />
-    <main className="flex-1">{children}</main>
-    <Footer />
-  </div>
-);
+const Layout = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
+  return (
+    <div className="min-h-screen bg-primary flex flex-col">
+      <Header />
+      {!isHome && (
+        <div className="container mx-auto px-4 pt-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-accent hover:underline text-sm font-medium"
+          >
+            <Home className="h-4 w-4" />
+            Página Inicial
+          </Link>
+        </div>
+      )}
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  );
+};
 
 export default Layout;
