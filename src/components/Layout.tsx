@@ -30,13 +30,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const isHome = location.pathname === "/";
 
   return (
-    <div className="min-h-screen bg-primary flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
       {!isHome && (
         <div className="container mx-auto px-4 pt-4">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-accent hover:underline text-sm font-medium"
+            className="inline-flex items-center gap-1.5 text-primary hover:underline text-sm font-medium"
           >
             <Home className="h-4 w-4" />
             Página Inicial
