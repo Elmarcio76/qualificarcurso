@@ -260,7 +260,7 @@ const Admin = () => {
                   <p className="text-muted-foreground">Nenhum pagamento encontrado.</p>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-xs">
                       <thead>
                         <tr className="border-b">
                           <th className="text-left py-2 px-2">Data</th>
