@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, LogOut, User, Shield } from "lucide-react";
+import { ShoppingCart, LogOut, User, Shield, HelpCircle, MessageSquare, Info } from "lucide-react";
 import logo from "@/assets/logo2.png";
 
 const Header = () => {
@@ -16,7 +16,16 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Qualificar Cursos" className="h-10 w-auto rounded bg-white px-2 py-0.5" />
         </Link>
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-1 md:gap-2 flex-wrap">
+          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10 text-xs md:text-sm" onClick={() => navigate("/course-info")}>
+            <Info className="mr-1 h-4 w-4" /> <span className="hidden md:inline">Sobre</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10 text-xs md:text-sm" onClick={() => navigate("/faq")}>
+            <HelpCircle className="mr-1 h-4 w-4" /> <span className="hidden md:inline">FAQ</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10 text-xs md:text-sm" onClick={() => navigate("/contact")}>
+            <MessageSquare className="mr-1 h-4 w-4" /> <span className="hidden md:inline">Contato</span>
+          </Button>
           {user ? (
             <>
               <Button
